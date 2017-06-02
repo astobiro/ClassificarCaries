@@ -81,9 +81,14 @@ def removeElements(list, els):
 
 	return newlist
 
-def saveImagesToFolder(images, folder):
-	for i in range(len(images)):
-		cv2.imwrite(folder + str(i) + ".jpg", images[i])
+def saveImagesToFolder(images, folder, count):
+    counter = count
+    print("Start saving:", counter)
+    for i in range(len(images)):
+        cv2.imwrite(folder + str(counter) + ".jpg", images[i])
+        counter += 1
+    print("End saving:", counter)
+    return counter
 
 def TreinoTeste(les, nonles):
 	randles = []
@@ -189,10 +194,10 @@ def main():
 	random.shuffle(newtestles)
 	random.shuffle(newtrainnonles)
 	random.shuffle(newtestnonles)
-	saveImagesToFolder(newtrainles, "C:/Users/Artur/Desktop/Treino L/")
-	saveImagesToFolder(newtestles, "C:/Users/Artur/Desktop/Teste L/")
-	saveImagesToFolder(newtrainnonles, "C:/Users/Artur/Desktop/Treino NL/")
-	saveImagesToFolder(newtestnonles, "C:/Users/Artur/Desktop/Teste NL/")
+	c = saveImagesToFolder(newtrainles, "C:/Users/Artur/Desktop/Treino L/", 0)
+	c1 = saveImagesToFolder(newtestles, "C:/Users/Artur/Desktop/Teste L/", c)
+	c2 = saveImagesToFolder(newtrainnonles, "C:/Users/Artur/Desktop/Treino NL/", c1)
+	c3 = saveImagesToFolder(newtestnonles, "C:/Users/Artur/Desktop/Teste NL/", c2)
 	stop = timeit.default_timer()
 	print("End, Runtime:", stop-start)
 

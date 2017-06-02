@@ -2,6 +2,7 @@ import cv2
 import glob
 import timeit
 import numpy as np
+import random
 
 def findSmaller(images):
 	minWidth = 9999
@@ -46,6 +47,8 @@ def resize(image):
 		y = 28
 		tempImg = cv2.resize(image, (x, y))
 		resimage = preencher(tempImg)
+	else:
+		resimage = None
 
 	return resimage
 
@@ -62,6 +65,106 @@ def resizeAll(les, nonles):
 
 	return resles, resnonles
 
+def checkInList(list, el):
+	for i in range(len(list)):
+		if el == list[i]:
+			return True
+	return False
+
+def removeElements(list, els):
+	newlist = []
+	for i in range(len(list)):
+		if checkInList(els, i):
+			i += 1
+		else:
+			newlist.append(list[i])
+
+	return newlist
+
+def saveImagesToFolder(images, folder):
+	for i in range(len(images)):
+		cv2.imwrite(folder + str(i) + ".jpg", images[i])
+
+def TreinoTeste(les, nonles):
+	randles = []
+	randnonles = []
+	randomles = []
+	newrandomles = 0
+	randomnonles = []
+	newrandomnonles = 0
+	for i in range(100):
+		newrandomles = random.randint(0, len(les)-1)
+		if checkInList(randomles, newrandomles) == False:
+			randomles.append(newrandomles)
+		else:
+			while checkInList(randomles, newrandomles):
+				newrandomles = random.randrange(0, len(les)-1)
+			randomles.append(newrandomles)
+
+		newrandomnonles = random.randint(0, len(nonles)-1)
+		if checkInList(randomnonles, newrandomnonles) == False:
+			randomnonles.append(newrandomnonles)
+		else:
+			while checkInList(randomnonles, newrandomnonles):
+				newrandomnonles = random.randrange(0, len(nonles)-1)
+			randomnonles.append(newrandomnonles)
+
+		randles.append(les[newrandomles])
+		randnonles.append(nonles[newrandomnonles])
+
+	# print(randomles)
+	# print(randomnonles)
+	treinoles = removeElements(les, randomles)
+	treinononles = removeElements(nonles, randomnonles)
+
+	return treinoles, randles, treinononles, randnonles
+
+def rotate(image, angle):
+	x, y = image.shape
+	M = cv2.getRotationMatrix2D((y/2, x/2), angle, 1)
+	dst = cv2.warpAffine(image, M, (y, x))
+
+	return dst
+
+def generate9(image):
+	img1 = rotate(image, 90)
+	img2 = cv2.flip(rotate(image, 90), 0)
+	img3 = cv2.flip(rotate(image, 90), 1)
+	img4 = rotate(image, 180)
+	img5 = cv2.flip(rotate(image, 180), 0)
+	img6 = cv2.flip(rotate(image, 180), 1)
+	img7 = rotate(image, 270)
+	img8 = cv2.flip(rotate(image, 270), 0)
+	img9 = cv2.flip(rotate(image, 270), 1)
+
+	return img1, img2, img3, img4, img5, img6, img7, img8, img9
+
+def rotateAndGenerateAll(trainles, testles, trainnonles, testnonles):
+	newtrainles = []
+	newtestles = []
+	newtrainnonles = []
+	newtestnonles = []
+	for i in range(len(trainles)):
+		temp = generate9(trainles[i])
+		for j in range(len(temp)):
+			newtrainles.append(temp[j])
+
+	for i in range(len(trainnonles)):
+		temp = generate9(trainnonles[i])
+		for j in range(len(temp)):
+			newtrainnonles.append(temp[j])
+
+	for i in range(len(testles)):
+		temp = generate9(testles[i])
+		for j in range(len(temp)):
+			newtestles.append(temp[j])
+
+		temp = generate9(testnonles[i])
+		for j in range(len(temp)):
+			newtestnonles.append(temp[j])
+
+	return newtrainles, newtestles, newtrainnonles, newtestnonles
+
 def main():
 	print("Start")
 	start = timeit.default_timer()
@@ -70,7 +173,7 @@ def main():
 	nlImages = [cv2.imread(file, 0) for file in glob.glob("C:/Users/Artur/Dropbox/Projeto/Patches NL/*.jpg")]
 	#Redimensiona todas as imagens para uma escala 28x28
 	reslImages, resnlImages = resizeAll(lImages, nlImages)
-	print("Redimensionados: ", len(reslImages), len(resnlImages))
+	print("Redimensionados: ", len(reslImages), "lesões e", len(resnlImages), "não lesões")
 
 	# cv2.imshow("Teste", reslImages[28])
 	# cv2.imshow("Teste 2", reslImages[123])
@@ -78,6 +181,18 @@ def main():
 	# cv2.imshow("Teste 4", resnlImages[98])
 	# cv2.waitKey()
 
+	treinoles, testeles, treinononles, testenonles = TreinoTeste(reslImages, resnlImages)
+	print(len(treinoles), len(testeles), len(treinononles), len(testenonles))
+	newtrainles, newtestles, newtrainnonles, newtestnonles = rotateAndGenerateAll(treinoles, testeles, treinononles, testenonles)
+	print(len(newtrainles), len(newtestles), len(newtrainnonles), len(newtestnonles), len(newtrainles) + len(newtestles) + len(newtrainnonles) + len(newtestnonles))
+	random.shuffle(newtrainles)
+	random.shuffle(newtestles)
+	random.shuffle(newtrainnonles)
+	random.shuffle(newtestnonles)
+	saveImagesToFolder(newtrainles, "C:/Users/Artur/Desktop/Treino L/")
+	saveImagesToFolder(newtestles, "C:/Users/Artur/Desktop/Teste L/")
+	saveImagesToFolder(newtrainnonles, "C:/Users/Artur/Desktop/Treino NL/")
+	saveImagesToFolder(newtestnonles, "C:/Users/Artur/Desktop/Teste NL/")
 	stop = timeit.default_timer()
 	print("End, Runtime:", stop-start)
 

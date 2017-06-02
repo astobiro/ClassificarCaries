@@ -159,16 +159,7 @@ def rotateAndGenerateAll(trainles, testles, trainnonles, testnonles):
 		for j in range(len(temp)):
 			newtrainnonles.append(temp[j])
 
-	for i in range(len(testles)):
-		temp = generate9(testles[i])
-		for j in range(len(temp)):
-			newtestles.append(temp[j])
-
-		temp = generate9(testnonles[i])
-		for j in range(len(temp)):
-			newtestnonles.append(temp[j])
-
-	return newtrainles, newtestles, newtrainnonles, newtestnonles
+	return newtrainles, newtrainnonles
 
 def main():
 	print("Start")
@@ -188,16 +179,14 @@ def main():
 
 	treinoles, testeles, treinononles, testenonles = TreinoTeste(reslImages, resnlImages)
 	print(len(treinoles), len(testeles), len(treinononles), len(testenonles))
-	newtrainles, newtestles, newtrainnonles, newtestnonles = rotateAndGenerateAll(treinoles, testeles, treinononles, testenonles)
-	print(len(newtrainles), len(newtestles), len(newtrainnonles), len(newtestnonles), len(newtrainles) + len(newtestles) + len(newtrainnonles) + len(newtestnonles))
+	newtrainles, newtrainnonles = rotateAndGenerateAll(treinoles, testeles, treinononles, testenonles)
+	print(len(newtrainles), len(newtrainnonles), len(newtrainles) + len(newtrainnonles) + 200)
 	random.shuffle(newtrainles)
-	random.shuffle(newtestles)
 	random.shuffle(newtrainnonles)
-	random.shuffle(newtestnonles)
 	c = saveImagesToFolder(newtrainles, "C:/Users/Artur/Desktop/Treino L/", 0)
-	c1 = saveImagesToFolder(newtestles, "C:/Users/Artur/Desktop/Teste L/", c)
+	c1 = saveImagesToFolder(testeles, "C:/Users/Artur/Desktop/Teste L/", c)
 	c2 = saveImagesToFolder(newtrainnonles, "C:/Users/Artur/Desktop/Treino NL/", c1)
-	c3 = saveImagesToFolder(newtestnonles, "C:/Users/Artur/Desktop/Teste NL/", c2)
+	c3 = saveImagesToFolder(testenonles, "C:/Users/Artur/Desktop/Teste NL/", c2)
 	stop = timeit.default_timer()
 	print("End, Runtime:", stop-start)
 

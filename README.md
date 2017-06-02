@@ -1,2 +1,2 @@
 # ClassificarCaries
-Python code to resize images to run on a CNN
+Código em Python para tratar imagens para rodar numa CNN usando Opencv 3

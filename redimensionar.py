@@ -5,6 +5,7 @@ import numpy as np
 import random
 
 def preencher(image):
+	#Preenche uma imagem de fundo com a imagem do parametro
 	temp = np.zeros((28, 28), np.uint8)
 	width = image.shape[0]
 	height = image.shape[1]
@@ -15,6 +16,7 @@ def preencher(image):
 	return temp
 
 def resize(image):
+	# Redimensiona uma imagem para uma escala 28x28 proporcionalmente e as coloca em uma imagem 28x28 de fundo
 	x = image.shape[0]
 	y = image.shape[1]
 	if x <= 28 and y <= 28:
@@ -42,6 +44,7 @@ def resize(image):
 	return resimage
 
 def resizeAll(les, nonles):
+	# Redimensiona todas as imagens para uma escala 28x28
 	resles = []
 	resnonles = []
 	for i in range(len(les)):
@@ -55,12 +58,14 @@ def resizeAll(les, nonles):
 	return resles, resnonles
 
 def checkInList(vet, el):
+	#checa se um elemento está na lista
 	for i in range(len(vet)):
 		if el == vet[i]:
 			return True
 	return False
 
 def removeElements(vet, els):
+	#Concatena elementos não presentes nos indices da lista els em uma nova lista
 	newlist = []
 	for i in range(len(vet)):
 		if checkInList(els, i):
@@ -71,6 +76,7 @@ def removeElements(vet, els):
 	return newlist
 
 def saveImagesToFolder(images, folder, count):
+	#salva cada imagem da lista no caminho especificado, com seu nome iniciando em count e incrementado
     counter = count
     print("Start saving:", counter)
     for i in range(len(images)):
@@ -80,6 +86,7 @@ def saveImagesToFolder(images, folder, count):
     return counter
 
 def TreinoTeste(les, nonles):
+	# Separa as imagens 100 lesões pra teste, 100 não lesões para teste e o resto para treino
 	randles = []
 	randnonles = []
 	randomles = []
@@ -110,6 +117,7 @@ def TreinoTeste(les, nonles):
 	return treinoles, randles, treinononles, randnonles
 
 def rotate(image, angle):
+	#rotaciona uma imagem em um determinado angulo
 	x, y = image.shape
 	M = cv2.getRotationMatrix2D((y/2, x/2), angle, 1)
 	dst = cv2.warpAffine(image, M, (y, x))
@@ -117,6 +125,7 @@ def rotate(image, angle):
 	return dst
 
 def generate9(image):
+	# Gera 9 novas imagens para uma imagem, rotacionando e espelhando-a
 	img1 = rotate(image, 90)
 	img2 = cv2.flip(rotate(image, 90), 0)
 	img3 = cv2.flip(rotate(image, 90), 1)
@@ -130,6 +139,7 @@ def generate9(image):
 	return img1, img2, img3, img4, img5, img6, img7, img8, img9
 
 def rotateAndGenerateAll(trainles, trainnonles):
+	# Gera 9 novas imagens para cada imagem de lesão e não lesão do treino
 	newtrainles = []
 	newtrainnonles = []
 	for i in range(len(trainles)):
@@ -150,14 +160,16 @@ def main():
 	#Carrega todas as imagens nas pastas em listas
 	lImages = [cv2.imread(file, 0) for file in glob.glob("C:/Users/Artur/Dropbox/Projeto/Patches L/*.jpg")]
 	nlImages = [cv2.imread(file, 0) for file in glob.glob("C:/Users/Artur/Dropbox/Projeto/Patches NL/*.jpg")]
-	#Redimensiona todas as imagens para uma escala 28x28
+
 	reslImages, resnlImages = resizeAll(lImages, nlImages)
 	print("Redimensionados: ", len(reslImages), "lesões e", len(resnlImages), "não lesões")
 
 	treinoles, testeles, treinononles, testenonles = TreinoTeste(reslImages, resnlImages)
 	print(len(treinoles), len(testeles), len(treinononles), len(testenonles))
+
 	newtrainles, newtrainnonles = rotateAndGenerateAll(treinoles, treinononles)
 	print(len(newtrainles), len(newtrainnonles), len(newtrainles) + len(newtrainnonles) + 200)
+	#Mistura os elementos das listas
 	random.shuffle(newtrainles)
 	random.shuffle(newtrainnonles)
 	c = saveImagesToFolder(newtrainles, "C:/Users/Artur/Desktop/Treino L/", 0)

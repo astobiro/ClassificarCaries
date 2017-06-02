@@ -54,19 +54,19 @@ def resizeAll(les, nonles):
 
 	return resles, resnonles
 
-def checkInList(list, el):
-	for i in range(len(list)):
-		if el == list[i]:
+def checkInList(vet, el):
+	for i in range(len(vet)):
+		if el == vet[i]:
 			return True
 	return False
 
-def removeElements(list, els):
+def removeElements(vet, els):
 	newlist = []
-	for i in range(len(list)):
+	for i in range(len(vet)):
 		if checkInList(els, i):
 			i += 1
 		else:
-			newlist.append(list[i])
+			newlist.append(vet[i])
 
 	return newlist
 
@@ -83,12 +83,10 @@ def TreinoTeste(les, nonles):
 	randles = []
 	randnonles = []
 	randomles = []
-	newrandomles = 0
 	randomnonles = []
-	newrandomnonles = 0
 	for i in range(100):
 		newrandomles = random.randint(0, len(les)-1)
-		if checkInList(randomles, newrandomles) == False:
+		if not checkInList(randomles, newrandomles):
 			randomles.append(newrandomles)
 		else:
 			while checkInList(randomles, newrandomles):
@@ -96,7 +94,7 @@ def TreinoTeste(les, nonles):
 			randomles.append(newrandomles)
 
 		newrandomnonles = random.randint(0, len(nonles)-1)
-		if checkInList(randomnonles, newrandomnonles) == False:
+		if not checkInList(randomnonles, newrandomnonles):
 			randomnonles.append(newrandomnonles)
 		else:
 			while checkInList(randomnonles, newrandomnonles):
@@ -106,8 +104,6 @@ def TreinoTeste(les, nonles):
 		randles.append(les[newrandomles])
 		randnonles.append(nonles[newrandomnonles])
 
-	# print(randomles)
-	# print(randomnonles)
 	treinoles = removeElements(les, randomles)
 	treinononles = removeElements(nonles, randomnonles)
 
@@ -135,9 +131,7 @@ def generate9(image):
 
 def rotateAndGenerateAll(trainles, trainnonles):
 	newtrainles = []
-	newtestles = []
 	newtrainnonles = []
-	newtestnonles = []
 	for i in range(len(trainles)):
 		temp = generate9(trainles[i])
 		for j in range(len(temp)):

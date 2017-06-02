@@ -144,7 +144,7 @@ def generate9(image):
 
 	return img1, img2, img3, img4, img5, img6, img7, img8, img9
 
-def rotateAndGenerateAll(trainles, testles, trainnonles, testnonles):
+def rotateAndGenerateAll(trainles, trainnonles):
 	newtrainles = []
 	newtestles = []
 	newtrainnonles = []
@@ -179,7 +179,7 @@ def main():
 
 	treinoles, testeles, treinononles, testenonles = TreinoTeste(reslImages, resnlImages)
 	print(len(treinoles), len(testeles), len(treinononles), len(testenonles))
-	newtrainles, newtrainnonles = rotateAndGenerateAll(treinoles, testeles, treinononles, testenonles)
+	newtrainles, newtrainnonles = rotateAndGenerateAll(treinoles, treinononles)
 	print(len(newtrainles), len(newtrainnonles), len(newtrainles) + len(newtrainnonles) + 200)
 	random.shuffle(newtrainles)
 	random.shuffle(newtrainnonles)

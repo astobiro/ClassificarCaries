@@ -4,17 +4,6 @@ import timeit
 import numpy as np
 import random
 
-def findSmaller(images):
-	minWidth = 9999
-	minHeight = 9999
-	for i in range(len(images)):
-		if images[i].shape[0] < minHeight and images[i].shape[1] < minWidth:
-			minHeight = images[i].shape[1]
-			minWidth = images[i].shape[0]
-			minI = i
-
-	return minWidth, minHeight, minI
-
 def preencher(image):
 	temp = np.zeros((28, 28), np.uint8)
 	width = image.shape[0]
@@ -170,12 +159,6 @@ def main():
 	#Redimensiona todas as imagens para uma escala 28x28
 	reslImages, resnlImages = resizeAll(lImages, nlImages)
 	print("Redimensionados: ", len(reslImages), "lesões e", len(resnlImages), "não lesões")
-
-	# cv2.imshow("Teste", reslImages[28])
-	# cv2.imshow("Teste 2", reslImages[123])
-	# cv2.imshow("Teste 3", resnlImages[123])
-	# cv2.imshow("Teste 4", resnlImages[98])
-	# cv2.waitKey()
 
 	treinoles, testeles, treinononles, testenonles = TreinoTeste(reslImages, resnlImages)
 	print(len(treinoles), len(testeles), len(treinononles), len(testenonles))

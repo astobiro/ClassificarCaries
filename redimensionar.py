@@ -126,15 +126,24 @@ def rotate(image, angle):
 
 def generate9(image):
 	# Gera 9 novas imagens para uma imagem, rotacionando e espelhando-a
+	# rotacionada 90 graus
 	img1 = rotate(image, 90)
-	img2 = cv2.flip(rotate(image, 90), 0)
-	img3 = cv2.flip(rotate(image, 90), 1)
+	# rotacionada 90 graus e espelhada em x
+	img2 = cv2.flip(img1, 0)
+	# rotacionada 90 graus e espelhada em y
+	img3 = cv2.flip(img1, 1)
+	# rotacionada 180 graus
 	img4 = rotate(image, 180)
-	img5 = cv2.flip(rotate(image, 180), 0)
-	img6 = cv2.flip(rotate(image, 180), 1)
+	# rotacionada 180 graus e espelhada em x
+	img5 = cv2.flip(img4, 0)
+	# rotacionada 180 graus e espelhada em y
+	img6 = cv2.flip(img4, 1)
+	# rotacionada 270 graus
 	img7 = rotate(image, 270)
-	img8 = cv2.flip(rotate(image, 270), 0)
-	img9 = cv2.flip(rotate(image, 270), 1)
+	# rotacionada 270 graus e espelhada em x
+	img8 = cv2.flip(img7, 0)
+	# rotacionada 270 graus e espelhada em y
+	img9 = cv2.flip(img7, 1)
 
 	return img1, img2, img3, img4, img5, img6, img7, img8, img9
 
@@ -172,10 +181,10 @@ def main():
 	#Mistura os elementos das listas
 	random.shuffle(newtrainles)
 	random.shuffle(newtrainnonles)
-	c = saveImagesToFolder(newtrainles, "C:/Users/Artur/Desktop/Treino L/", 0)
-	c1 = saveImagesToFolder(testeles, "C:/Users/Artur/Desktop/Teste L/", c)
-	c2 = saveImagesToFolder(newtrainnonles, "C:/Users/Artur/Desktop/Treino NL/", c1)
-	c3 = saveImagesToFolder(testenonles, "C:/Users/Artur/Desktop/Teste NL/", c2)
+	# c = s	aveImagesToFolder(newtrainles, "C:/Users/Artur/Desktop/Treino L/", 0)
+	# c1 = saveImagesToFolder(testeles, "C:/Users/Artur/Desktop/Teste L/", c)
+	# c2 = saveImagesToFolder(newtrainnonles, "C:/Users/Artur/Desktop/Treino NL/", c1)
+	# c3 = saveImagesToFolder(testenonles, "C:/Users/Artur/Desktop/Teste NL/", c2)
 	stop = timeit.default_timer()
 	print("End, Runtime:", stop-start)
 
